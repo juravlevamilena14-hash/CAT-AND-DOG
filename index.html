@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🐕 Собака ловит 🐱 Кота</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Экран разрешений -->
+    <div id="permissionsScreen" class="screen active">
+        <div class="container">
+            <h1>🐕 Поймай Кота! 🐱</h1>
+            <p>Разреши доступ к камере и геолокации</p>
+            
+            <div class="permissions-list">
+                <div id="cameraStatus" class="permission-item">
+                    <span class="icon">📸</span>
+                    <span>Камера</span>
+                    <span class="status">⏳</span>
+                </div>
+                <div id="geoStatus" class="permission-item">
+                    <span class="icon">📍</span>
+                    <span>Геолокация</span>
+                    <span class="status">⏳</span>
+                </div>
+            </div>
+            
+            <button id="requestPermissionsBtn" class="btn">Разрешить доступ</button>
+        </div>
+    </div>
+
+    <!-- Экран камеры -->
+    <div id="cameraScreen" class="screen">
+        <div class="container camera-container">
+            <h2>📸 Проверка камеры</h2>
+            <video id="cameraPreview" autoplay playsinline></video>
+            <p id="geoInfo">📍 Загружаем геолокацию...</p>
+            <button id="startGameBtn" class="btn">Начать игру!</button>
+        </div>
+    </div>
+
+    <!-- Экран игры -->
+    <div id="gameScreen" class="screen">
+        <canvas id="gameCanvas"></canvas>
+    </div>
+
+    <!-- Экран результата -->
+    <div id="resultScreen" class="screen">
+        <div class="container result-container">
+            <h1>🎉 Ты поймал кота!</h1>
+            <p id="resultText"></p>
+            <p id="resultGeo">📍 Твоя геолокация отправлена владельцу</p>
+            <p id="resultPhoto">📸 Фото с камеры отправлено</p>
+            <button id="playAgainBtn" class="btn">Играть снова</button>
+        </div>
+    </div>
+
+    <script src="permissions.js"></script>
+    <script src="game.js"></script>
+</body>
+</html>

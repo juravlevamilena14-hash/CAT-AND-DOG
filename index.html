@@ -3,40 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🐕 Собака ловит 🐱 Кота</title>
+    <title>🐕 Поймай Кота! 🐱</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <!-- Экран разрешений -->
-    <div id="permissionsScreen" class="screen active">
-        <div class="container">
+    <!-- Экран загрузки -->
+    <div id="loadingScreen" class="screen active">
+        <div class="loading-container">
             <h1>🐕 Поймай Кота! 🐱</h1>
-            <p>Разреши доступ к камере и геолокации</p>
-            
-            <div class="permissions-list">
-                <div id="cameraStatus" class="permission-item">
-                    <span class="icon">📸</span>
-                    <span>Камера</span>
-                    <span class="status">⏳</span>
-                </div>
-                <div id="geoStatus" class="permission-item">
-                    <span class="icon">📍</span>
-                    <span>Геолокация</span>
-                    <span class="status">⏳</span>
-                </div>
-            </div>
-            
-            <button id="requestPermissionsBtn" class="btn">Разрешить доступ</button>
-        </div>
-    </div>
-
-    <!-- Экран камеры -->
-    <div id="cameraScreen" class="screen">
-        <div class="container camera-container">
-            <h2>📸 Проверка камеры</h2>
-            <video id="cameraPreview" autoplay playsinline></video>
-            <p id="geoInfo">📍 Загружаем геолокацию...</p>
-            <button id="startGameBtn" class="btn">Начать игру!</button>
+            <p>Инициализация игры...</p>
+            <div class="spinner"></div>
         </div>
     </div>
 
